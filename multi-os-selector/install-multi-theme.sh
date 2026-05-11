@@ -76,12 +76,30 @@ echo ""
 echo -e "${YELLOW}Step 4: Copying fonts...${NC}"
 mkdir -p "$GRUB_THEME_DIR/fonts"
 # Copy Matrix font
-cp "$SCRIPT_DIR/../github/Matrix-Morpheus-GRUB-Theme/Matrix/font.pf2" "$GRUB_THEME_DIR/"
-echo -e "${GREEN}✓ Matrix font copied${NC}"
+MATRIX_FONT_LOCAL="$SCRIPT_DIR/fonts/font.pf2"
+MATRIX_FONT_SRC="$SCRIPT_DIR/../github/Matrix-Morpheus-GRUB-Theme/Matrix/font.pf2"
+if [[ -f "$MATRIX_FONT_LOCAL" ]]; then
+    cp "$MATRIX_FONT_LOCAL" "$GRUB_THEME_DIR/"
+    echo -e "${GREEN}✓ Matrix font copied from local bundle${NC}"
+elif [[ -f "$MATRIX_FONT_SRC" ]]; then
+    cp "$MATRIX_FONT_SRC" "$GRUB_THEME_DIR/"
+    echo -e "${GREEN}✓ Matrix font copied from github reference${NC}"
+else
+    echo -e "${YELLOW}⚠ Matrix font not found in local bundle or github reference - skipping${NC}"
+fi
 
-# Copy DedSec fonts
-cp "$SCRIPT_DIR/../github/dedsec-grub2-theme/assets/fonts/1080p/"*.pf2 "$GRUB_THEME_DIR/fonts/"
-echo -e "${GREEN}✓ DedSec fonts copied${NC}"
+# Copy DedSec fonts (if available). If not found, warn and continue.
+DEDSEC_FONTS_LOCAL="$SCRIPT_DIR/fonts"
+DEDSEC_FONTS_DIR="$SCRIPT_DIR/../github/dedsec-grub2-theme/assets/fonts/1080p"
+if [[ -d "$DEDSEC_FONTS_LOCAL" ]] && compgen -G "$DEDSEC_FONTS_LOCAL/*.pf2" >/dev/null; then
+    cp "$DEDSEC_FONTS_LOCAL/"*.pf2 "$GRUB_THEME_DIR/fonts/" 2>/dev/null || true
+    echo -e "${GREEN}✓ DedSec fonts copied from local bundle${NC}"
+elif [[ -d "$DEDSEC_FONTS_DIR" ]] && compgen -G "$DEDSEC_FONTS_DIR/*.pf2" >/dev/null; then
+    cp "$DEDSEC_FONTS_DIR/"*.pf2 "$GRUB_THEME_DIR/fonts/" 2>/dev/null || true
+    echo -e "${GREEN}✓ DedSec fonts copied from github reference${NC}"
+else
+    echo -e "${YELLOW}⚠ DedSec fonts not found in local bundle or github reference - skipping${NC}"
+fi
 
 echo ""
 echo -e "${YELLOW}Step 5: Copying image assets...${NC}"

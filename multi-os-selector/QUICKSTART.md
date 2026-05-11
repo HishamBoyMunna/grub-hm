@@ -28,6 +28,14 @@ cd /path/to/multi-os-selector
 chmod +x install-multi-theme.sh reorganize-entries.sh revert-grub.sh
 ```
 
+If you want the installer to be fully self-contained (recommended), bundle the required fonts and images into the local folder first:
+
+```bash
+# Optional: gather fonts/images into local bundle
+chmod +x bundle-assets.sh
+./bundle-assets.sh
+```
+
 ### Step 2: Run Installation (Requires Sudo)
 ```bash
 sudo bash install-multi-theme.sh

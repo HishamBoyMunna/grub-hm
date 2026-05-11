@@ -1,0 +1,28 @@
+#!/bin/bash
+# =============================
+# Multi-OS Selector Custom Menu
+# To be placed in /etc/grub.d/40_custom_multi_os
+# =============================
+# This file integrates Arch boot entries into submenus
+# Activated after existing GRUB entries are generated
+
+# This script generates dynamic submenus based on detected boot entries
+# It wraps Arch Linux entries into a DedSec-themed submenu
+# And provides a Windows joke BSOD submenu
+
+exec tail -n +3 $0
+
+# Arch Linux submenu
+submenu 'Arch Linux' {
+    # DedSec theme will be loaded for this submenu
+    # Arch boot entries are injected here by the installer
+}
+
+# Windows joke submenu (permanent BSOD)
+submenu 'Windows' {
+    # BSOD theme will be applied for this submenu
+    menuentry 'Windows (Press ESC to escape)' {
+        # No boot command - just displays BSOD until user presses ESC
+        true
+    }
+}

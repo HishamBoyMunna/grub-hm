@@ -11,6 +11,7 @@ multi-os-selector/
 ├── theme-windows-bsod.txt         ← Windows BSOD joke theme
 ├── install-multi-theme.sh         ← Main installation script ⭐
 ├── reorganize-entries.sh          ← Entry reorganization helper
+├── revert-grub.sh                 ← Revert helper (restore original GRUB)
 ├── 40_custom_multi_os             ← GRUB script (reference)
 ├── grub-custom-menu.cfg           ← Custom menu config (reference)
 └── README.md                       ← Full documentation
@@ -24,7 +25,7 @@ multi-os-selector/
 cd /path/to/multi-os-selector
 
 # Make the installer executable
-chmod +x install-multi-theme.sh reorganize-entries.sh
+chmod +x install-multi-theme.sh reorganize-entries.sh revert-grub.sh
 ```
 
 ### Step 2: Run Installation (Requires Sudo)
@@ -129,6 +130,11 @@ When you boot, you'll see:
 - Adds Windows joke submenu
 - Can be run after initial install or combined with main installer
 
+**revert-grub.sh**
+- Revert helper: restores `/etc/default/grub` from the install backup
+- Regenerates GRUB config and optionally removes the installed theme directory
+- Use this to safely roll back the installer changes
+
 ## What Gets Installed
 
 ### On Your System
@@ -188,15 +194,18 @@ ls /boot/grub/themes/multi-os-selector/fonts/
 ```
 
 ### Want to revert?
+Use the provided revert helper to restore your original GRUB configuration and optionally remove the installed theme directory:
+
 ```bash
-# Restore original GRUB config
+sudo bash /path/to/multi-os-selector/revert-grub.sh
+```
+
+If you prefer to revert manually, the operations performed by the helper are equivalent to:
+
+```bash
 sudo cp /etc/default/grub.backup /etc/default/grub
-
-# Regenerate GRUB
 sudo grub-mkconfig -o /boot/grub/grub.cfg
-
-# Optionally remove theme files
-sudo rm -rf /boot/grub/themes/multi-os-selector
+sudo rm -rf /boot/grub/themes/multi-os-selector   # optional
 ```
 
 ## Customization
